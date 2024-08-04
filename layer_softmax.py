@@ -8,15 +8,15 @@ class SoftmaxLayer(LayerBase):
 
     def forward(self, X):
         """
-            :param X: FC层输出
-            :return 向量,归一化的分类结果
+            :param X: Output of FC layer
+            :return Vector, the result of normalization.
         """
         Z = np.exp(X - np.max(X))  # 防止溢出  
         return Z / np.sum(Z)
 
     def backward(self, Y_A):
         """
-            :param Y_A=(Y,A) Y,Softmax层输出;A,标签,预期输出
+            :param Y_A=(Y,A) Y, output of Softmax layer; A, label, expected output
             :return dL/dX
         """
         return Y_A[0] - Y_A[1]

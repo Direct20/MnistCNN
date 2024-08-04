@@ -5,10 +5,10 @@ import math
 class ConvolutionLayerHardM(LayerBase):
     def __init__(self,kernels,padding=0,stride=1, learning_rate=0.01):
         """
-            :param kernels: 卷积核 (num,channel,height,width)
-            :param padding: 填充长度
-            :param stride: 步长
-            :param learning_rate: 学习率
+            :param kernels: Convolution kernels, in shape (num,channel,height,width)
+            :param padding: padding length
+            :param stride: 
+            :param learning_rate: 
         """
         super().__init__()
 
@@ -25,8 +25,8 @@ class ConvolutionLayerHardM(LayerBase):
 
     def forward(self, X):
         """
-            :param X: 输入(channel,row,col)
-            :return 卷积输出,(channel,row,col),通道数量等于卷积核数量
+            :param X: Input, in shape (channel,row,col)
+            :return Output, in shape (channel,row,col), the number of channels eqs kernels
         """
         X_channel,X_row,X_col=X.shape
         _,_,K_row,K_col=self.kernel.shape
@@ -42,7 +42,7 @@ class ConvolutionLayerHardM(LayerBase):
                 h_stride=i*self.stride
                 for j in range(0, Y_col, 1):
                     w_stride=j*self.stride
-                    patch = X_padded[:,h_stride:h_stride+K_row,w_stride:w_stride+K_col]# 提取输入的一个patch
+                    patch = X_padded[:,h_stride:h_stride+K_row,w_stride:w_stride+K_col]# extract a patch of input
                     Y[k,i, j] += np.sum(patch * self.kernel[k] + self.B[k])
 
         self.last_X = np.copy(X)
@@ -50,8 +50,8 @@ class ConvolutionLayerHardM(LayerBase):
 
     def backward(self, dLdY):
         """
-            :param dLdY: 输入(channel,row,col),通道数量等于当前层的卷积核数量
-            :return dLdX,(channel,row,col),通道数量等于输入X的通道的数量
+            :param dLdY: (channel,row,col), the number of channels eqs kernels of current layer.
+            :return dLdX,(channel,row,col), the number of channels eqs channels of X.
         """
         X = self.last_X
         
@@ -65,7 +65,7 @@ class ConvolutionLayerHardM(LayerBase):
         W_=1+(X_col+2*padding-K_col)//self.stride
         
         dLdX=np.zeros_like(X)
-        dLdK = np.zeros_like(self.kernel)  # dL/dK,多通道二维矩阵,维数和卷积核相同
+        dLdK = np.zeros_like(self.kernel)  # dL/dK, a multi-channel matrix, has the same dim with kernel
         X_padded=np.pad(X,[(0,0),(padding,padding),(padding,padding)],'constant')
         dLdX_padded=np.pad(dLdX,[(0,0),(padding,padding),(padding,padding)],'constant')
 

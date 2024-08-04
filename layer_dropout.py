@@ -6,7 +6,7 @@ class Dropout(LayerBase):
         super().__init__()
         
         """  
-            :param keep_prob: 保留概率  
+            :param keep_prob: Probability to keep 
         """  
         self.keep_prob = keep_prob  
         self.mask = None  

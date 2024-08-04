@@ -5,9 +5,9 @@ import numpy as np
 class DenseLayer(LayerBase):
     def __init__(self, input_dim, output_dim, learning_rate=0.01): 
         """
-            :param input_dim: 输入维度
-            :param output_dim: 输出维度
-            :param learning_rate: 学习率
+            :param input_dim: Input dimension
+            :param output_dim: Output dimension
+            :param learning_rate: 
         """ 
         self.W = np.random.randn(input_dim, output_dim)
         self.B = np.zeros((1, output_dim))

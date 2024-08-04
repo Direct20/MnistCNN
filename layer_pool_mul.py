@@ -31,8 +31,8 @@ class PoolLayerM(LayerBase):
 
     def backward(self, dLdY):
         """
-            :param dLdY: L对Y的导数矩阵,可以分为dLdY_11 dLdY_12 ...
-            :return dLdX: L对X的导数矩阵,可以分为dLdX_11 dLdx_12
+            :param dLdY: The matrix consist of the derivative of L with respect to Y, can be dLdY_11 dLdY_12 ... respectively.
+            :return dLdX: The matrix consist of the derivative of L with respect to X, can be dLdX_11 dLdx_12 ... respectively.
         """
         X=self.last_X
         X_Channel,X_row,X_col=X.shape

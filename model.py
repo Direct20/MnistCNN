@@ -11,7 +11,7 @@ class Model:
     def __init__(self,learning_rate=0.01):
         self.layers=[]
         
-        self.add(ConvolutionLayerHardM(np.array(
+        self.add(ConvolutionLayerHardM(np.array( # Sobel filter
         [
             [
                 [[-1,-2,-1],
@@ -45,9 +45,9 @@ class Model:
 
     def backward(self, Y, A):
         """
-            反向传播一次
-            :param Y: 上一次前向传播的输出
-            :param A: 上一次前向传播的预期输出
+            Backward propagation for once
+            :param Y: Last output of forward propagation (predict result)
+            :param A: The expected output of last forward propagation (label)
         """
         dLdX=(Y,A)
         for i in range(len(self.layers)-1,-1,-1):
@@ -58,20 +58,20 @@ class Model:
 
     def loss(self, Y, A):
         '''
-            计算损失
-            :param Y: 预测得到的值,10维向量
-            :param A: 标签,10维向量
+            Compute loss value
+            :param Y: Last output of forward propagation (predict result), 10 dimension vector
+            :param A: The expected output of last forward propagation (label), 10 dimension vector
         '''
-        Y = np.clip(Y, 1e-15, 1 - 1e-15)  # 防止log(0)  
+        Y = np.clip(Y, 1e-15, 1 - 1e-15)  # get rif of log(0)  
         return -np.sum(A*np.log(Y))
 
     def train(self, X, A, epochs,loss_sample_step=10,evaluate_step=500,evaluate_batch_size=20):
         """
-            训练模型
+            train the model
             :param X: (n*1*28*28)
-            :param A: 标签,(n*10)
-            :param epochs: 训练轮数
-            :return [[...],[...],...],第0个元素是第1个epoch的训练loss数据
+            :param A: Label,(n*10)
+            :param epochs: Times to train
+            :return [[...],[...],...], the 0th element is the loss data of the 1st epoch
         """
         
         loss_data=[[]]*epochs
@@ -102,26 +102,26 @@ class Model:
     
     def predict(self,X):
         '''
-            使用训练好的参数进行预测
-            :param X: 一张1*28*28的图片张量
-            :return 维度为10的向量
+            Conduct prediction using trained parameters.
+            :param X: An image tensor in shape 1*28*28.
+            :return A 10d vector, softmax layer raw output.
         '''
         return self.forward(X)
     
     def predict2(self,X):
         '''
-            使用训练好的参数进行预测
-            :param X: 一张1*28*28的图片张量
-            :return 所属类别0..9
+            Conduct prediction using trained parameters.
+            :param X: An image tensor in shape 1*28*28.
+            :return An integer between 0 and 9 representing the class of the image.
         '''
         Y= self.predict(X)  
         return np.argmax(Y) 
     
     def predict3(self,X):
         '''
-            使用训练好的参数进行预测
-            :param X: n*1*28*28
-            :return 所属类别n*10
+            Conduct prediction using trained parameters.
+            :param X: n*1*28*28.
+            :return A tensor in shape n*10, i.e. n raw outputs of softmax layer.
         '''
         Y=[]
         for x in X:
@@ -130,10 +130,10 @@ class Model:
     
     def evaluate(self,X,A):
         """
-            使用输入的n个样本,评估模型的性能
+            evaluate the performance of the model using n input examples.
             :param X: (n,1,28,28)
             :param A: (n,10)
-            :return (accuracy,macro_precision,macro_recall,confusion_matrix) macro意为宏平均
+            :return (accuracy,macro_precision,macro_recall,confusion_matrix), macro means macro-mean
         """
         num_class,num_sample=A.shape[1],X.shape[0]
         
@@ -188,7 +188,7 @@ class Model:
         for i in range(num_batch):
             print(f"Evaluating batch {i+1}/{num_batch}")
             (accuracy[i],macro_precision[i],macro_recall[i],macro_F1_score[i],_)=self.evaluate(
-                X[i:i+batch_size],A[i:i+batch_size])# 这个batch的评估数据
+                X[i:i+batch_size],A[i:i+batch_size])# the evaluation data of this batch
         print("Evaluation end")
         return (np.average(accuracy),np.average(macro_precision),np.average(macro_recall),np.average(macro_F1_score))
     
