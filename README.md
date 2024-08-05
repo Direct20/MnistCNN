@@ -11,7 +11,7 @@ Fig.1 Loss curve and accuracy curve.
 ![alt text](lr_crv.png)
 Fig.2 Learning rate curve
 ## Result
-![alt text](preview.png)
+![alt text](preview.png)  
 Fig.3 Preview
 ## Notice
 There is something wrong with weight updation in the process of convolution layer backward propagation. To prevent this problem, we use 2 Sobel filters and cancelled weight updation in the convolution layer.
